@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <report
+        id="report_medoc_fiche"
+        string="fiche de l'animal"
+        model="animals.template"
+        report_type="qweb-pdf"
+        name="veterinary_clinic.report_animal"
+        file="veterinary_clinic.report_animal"/>
+</odoo>

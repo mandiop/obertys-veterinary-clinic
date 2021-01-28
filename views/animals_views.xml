@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem name="Clinique Vétérinaire" id="clinic_veterinary_root" sequence='4'/>
+        <menuitem name="Patient" id="patient_animals_id" parent="clinic_veterinary_root" sequence='1'/>
+
+        <record id="clinic_animals_add_form_view" model="ir.ui.view">
+            <field name="name">veterinary_clinic.animals.form</field>
+            <field name="model">animals.template</field>
+            <field name="arch" type="xml">
+                <form string="AJOUT D'UN ANIMAL">
+                 <header>
+                    <button name="action_doc" type="object" string="Confirmation doctuer" class="oe_highlight" states="remp"/>
+                    <button name="act_sup" type="object" string="Confirmation sup-hier" class="oe_highlight" attrs="{'invisible': [('state','!=', 'doc')]}"/>
+                    <button name="act_phar" type="object" string="Confirmation pharmacien" class="oe_highlight" attrs="{'invisible': [('state','!=', 'suphier')]}"/>
+                    <button name="act_ter" type="object" string="Consultation terminer" class="oe_highlight" states="phar" />
+                <field name="workflow" widget="statusbar" statusbar_visible="remp,doc,suphier,phar,ter"/>
+                </header>
+                    <sheet>                  
+                        <div class="oe_title">
+                         <label for="consultation_num" />
+                              <h1>
+                                  <field name="consultation_num"   placeholder="New... " readonly="1"/>                                   
+                              </h1>
+                          <label for="consultation_date"/>
+                              <h1>
+                                  <field name="consultation_date"/>
+                              </h1>
+                            <label for="name"/>
+                                <h1>
+                                    <field name="name" placeholder="Bobo ... "/>
+                                </h1>
+                        </div>
+                        <separator string="Informations sur l'animal"/>
+                          <group col="4" colspan="8">
+                            <field name="gender"/>
+                            <field name="type_animals_id"/>
+                            <field name="class_animals_id"/>
+                            <field name="milieu_animals_id"/>
+                            <field name="born_date"/>
+                            <field name="age"/>
+                          </group>
+
+                          <group string="Informations du propriétaire">
+                            <field name="partner_id"/>
+                            <group col="4" colspan="8">
+                              <field name="adress"/>
+                              <field name="city"/>
+                              <field name="tel"/>
+                              <field name="mobile"/>
+                              <field name="email"/>
+                            </group>
+                          </group>
+                        <separator string="Medecin traitant"/>
+                            <field name="employee_id"/>
+                             <group col="4" colspan="4">
+                              <field name="dep_id"/>
+                              <field name="mentor_id"/>
+                              <field name="poste"/>
+                              <field name="phone"/>
+                              <field name="email_emp"/>
+                            </group>
+
+                          
+                    </sheet>
+                    <!-- <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div> -->
+                </form>
+            </field>
+        </record>
+
+        <record id="clinic_veterinary_animals_tree_view" model="ir.ui.view">
+            <field name="name">clinic_veterinary.animals.tree</field>
+            <field name="model">animals.template</field>
+            <field name="arch" type="xml">
+                <tree string="DEMANDE DE FORMATION">
+                     <field name="consultation_num"/>
+                    <field name="name"/>
+                    <field name="gender"/>
+                    <field name="partner_id"/>
+                    <field name="employee_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- <record id="ask_formation_search_view" model="ir.ui.view">
+            <field name="name">hr_evaluation.ask_formation.search</field>
+            <field name="model">hr_evaluation.ask_formation</field>
+            <field name="arch" type="xml">
+                <search string="DEMANDE DE FORMATION">
+                    <group expand="1" string="Group By">
+                        <filter string="Formation" name="training_title" domain="[]"
+                                context="{'group_by':'training_title'}"/>
+                    </group>
+                </search>
+            </field>
+        </record> -->
+        
+<!-- sequence de la consultation -->
+          <record model="ir.sequence" id="seq_consul">
+			<field name="name">Numero de consultation</field>
+            <field name="code">animals.template</field>
+            <field name="prefix">PAT-27/01/2021-</field>
+            <field name="padding">3</field>
+		  </record>
+
+<!--  kanban view creation -->
+           <record id="k_a_t" model="ir.ui.view">
+        <field name="name">k_a_t</field>
+        <field name="model">animals.template</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="employee_id" >
+                <field name="id"/>
+                <field name="name"/>
+                <field name="gender"/>
+                <field name="age"/>
+                <field name="partner_id"/>
+                <field name="employee_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_k_a_t">
+                            <!-- <t t-if="record.photo.raw_value">
+                                <div class="o_kanban_image_fill_left d-none d-md-block" 
+                                t-attf-style="background-photo:url= '#kanban_image('ins.fiche', 'photo', record.id.raw_value)'"/>
+                            </t>
+                            <t t-else="">
+                                <img class="o_kanban_image" alt="Avatar" t-att-src='_s + "/base/static/img/avatar.png"'/>
+                            </t> -->
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_tags_section"/>
+                                <ul>
+                                    <li>Nom : <field name="name"/></li>
+                                    <li>age: <field name="age"/></li>
+                                     <li>genre: <field name="gender"/></li>
+                                    <li>propriétaire : <field name="partner_id"/></li>
+                                    <li>Medecin traitant : <field name="employee_id"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+        <record id="add_animals_act_window" model="ir.actions.act_window">
+            <field name="name">Animaux</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">animals.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Créer un nouveau formulaire pour ajouter un animal
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Animaux"
+                  id="animals_id" parent="patient_animals_id" action="add_animals_act_window"/>
+
+    </data>
+</odoo>
