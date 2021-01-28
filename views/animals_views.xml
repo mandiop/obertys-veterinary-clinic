@@ -12,8 +12,8 @@
                 <form string="AJOUT D'UN ANIMAL">
                  <header>
                     <button name="action_doc" type="object" string="Confirmation doctuer" class="oe_highlight" states="remp"/>
-                    <button name="act_sup" type="object" string="Confirmation sup-hier" class="oe_highlight" attrs="{'invisible': [('state','!=', 'doc')]}"/>
-                    <button name="act_phar" type="object" string="Confirmation pharmacien" class="oe_highlight" attrs="{'invisible': [('state','!=', 'suphier')]}"/>
+                    <button name="act_sup" type="object" string="Confirmation sup-hier" class="oe_highlight" attrs="{'invisible': [('workflow','!=', 'doc')]}"/>
+                    <button name="act_phar" type="object" string="Confirmation pharmacien" class="oe_highlight" attrs="{'invisible': [('workflow','!=', 'suphier')]}"/>
                     <button name="act_ter" type="object" string="Consultation terminer" class="oe_highlight" states="phar" />
                 <field name="workflow" widget="statusbar" statusbar_visible="remp,doc,suphier,phar,ter"/>
                 </header>

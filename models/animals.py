@@ -46,13 +46,13 @@ class AnimalsTemplate(models.Model):
               return { 'warning': 
          { 'title':"Erreur de saisie", 'message':"la date de naisance est incorecte ", }, }
      
-    # @api.onchange('born_date',"consultation_date",'age')
-    # def _cal_age(self):
-    #     if self.born_date and self.consultation_date:
-    #         t1=datetime.strptime((self.born_date),"%Y-%m-%d %H:%M:%S")
-    #         t2=datetime.strptime(str(self.consultation_date),"%Y-%m-%d %H:%M:%S" )
-    #         d = (t1-t2)/30
-    #         self.age = d.days
+    @api.depends('born_date',"consultation_date")
+    def _cal_age(self):
+        if self.born_date and self.consultation_date:
+            t1=datetime.strptime(str(self.born_date),"%Y-%m-%d" )
+            t2=datetime.strptime(str(self.consultation_date),"%Y-%m-%d"  )
+            d = (t2-t1)/360
+            self.age = str(d.days)
 
 
 
@@ -81,7 +81,7 @@ class AnimalsTemplate(models.Model):
      
      
     workflow = fields.Selection([('remp', 'Remplissage'), ('doc', 'Confirmation doctuer'),('suphier', 'Confirmation sup-hier'),('phar', 'Confirmation pharmacien'),('ter', 'Consultation terminer')], 
-                               string='Status', readonly=True, default='remp')
+                               string='workflow', readonly=True, default='remp')
     consultation_num = fields.Char(string='Numéro de dossier', readonly=True,copy=False)
     consultation_date = fields.Date(u'Date de consultation', default=_get_datetime
                                     , readonly=True)
@@ -93,7 +93,7 @@ class AnimalsTemplate(models.Model):
     class_animals_id = fields.Many2one(string=u"Classe animal", comodel_name='animals.class')
     milieu_animals_id = fields.Many2one(string=u"Milieu animal", comodel_name='animals_class.milieu')
     born_date = fields.Date(string=u"Date de naissance", required=True)
-    age = fields.Integer(string=u"Age" )
+    age = fields.Integer(string=u"Age" ,comput="_cal_age")
 
     partner_id = fields.Many2one(string=u"Proprietaire",
                                   comodel_name='res.partner', required=True)
