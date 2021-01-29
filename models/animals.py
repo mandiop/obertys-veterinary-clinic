@@ -65,23 +65,27 @@ class AnimalsTemplate(models.Model):
 
 # workflow and statusbar creation
    
-    def action_doc(self):
+    def action_confirm(self):
         for rec in self:
-            rec.state = 'doc'
-    def act_sup(self):
+            rec.state = 'confirm'
+    def action_done(self):
         for rec in self:
-            rec.state='suphier'
-    def act_phar(self):
+            rec.state = 'done'
+    def action_ph(self):
         for rec in self:
-            rec.state = 'phar'
-    def act_ter(self):
+            rec.state = 'ph'
+    def action_fin(self):
         for rec in self:
-            rec.state='ter'
-# end workflow
-     
-     
-    workflow = fields.Selection([('remp', 'Remplissage'), ('doc', 'Confirmation doctuer'),('suphier', 'Confirmation sup-hier'),('phar', 'Confirmation pharmacien'),('ter', 'Consultation terminer')], 
-                               string='workflow', readonly=True, default='remp')
+            rec.state = 'fin'
+
+
+    state = fields.Selection([
+            ('draft', 'Consultaion'),
+            ('confirm', 'Confirmation docteur'),
+            ('done', 'Confirmation sup-hier'),
+             ('ph', 'Confirmation pharmacien'),
+              ('fin', 'Consultation terminer')
+        ], string='Status', readonly=True, default='draft')
     consultation_num = fields.Char(string='Numéro de dossier', readonly=True,copy=False)
     consultation_date = fields.Date(u'Date de consultation', default=_get_datetime
                                     , readonly=True)
@@ -93,7 +97,7 @@ class AnimalsTemplate(models.Model):
     class_animals_id = fields.Many2one(string=u"Classe animal", comodel_name='animals.class')
     milieu_animals_id = fields.Many2one(string=u"Milieu animal", comodel_name='animals_class.milieu')
     born_date = fields.Date(string=u"Date de naissance", required=True)
-    age = fields.Integer(string=u"Age" ,comput="_cal_age")
+    age = fields.Integer(string=u"Age" ,compute="_cal_age")
 
     partner_id = fields.Many2one(string=u"Proprietaire",
                                   comodel_name='res.partner', required=True)
